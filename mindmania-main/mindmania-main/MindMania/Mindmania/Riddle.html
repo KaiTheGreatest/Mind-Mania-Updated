@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mind Mania Quiz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Hanalei+Fill&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f3ec78, #af4261);
+            font-family: Arial, sans-serif;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            transition: background-color 0.5s;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            color: #735B2E;
+            font-family: 'Hanalei Fill', cursive;
+            margin: 0;
+        }
+
+        .header img {
+            width: 50px;
+            margin-left: 10px;
+        }
+
+        .quiz-container {
+            text-align: center;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 90%;
+            max-width: 400px;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        h2 {
+            color: #735B2E;
+            font-family: 'Hanalei Fill', cursive;
+        }
+
+        .question {
+            font-size: 18px;
+            margin: 20px 0;
+        }
+
+        .choices {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        button {
+            background-color: #f7931a;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        button:hover {
+            background-color: #d87d14;
+            transform: translateY(-3px);
+        }
+
+        button:active {
+            background-color: #b06210;
+            transform: translateY(0);
+        }
+
+        .timer {
+            margin: 20px 0;
+            font-size: 24px;
+            color: #d87d14;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .nav-button {
+            background-color: #f7931a;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .nav-button:hover {
+            background-color: #d87d14;
+            transform: translateY(-3px);
+        }
+
+        .nav-button:active {
+            background-color: #b06210;
+            transform: translateY(0);
+        }
+
+        .design {
+            width: 100px;
+            height: 100px;
+            background: #f7931a;
+            position: absolute;
+            border-radius: 50%;
+            animation: float 5s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        #design1 {
+            top: 20px;
+            left: 20px;
+        }
+
+        #design2 {
+            bottom: 20px;
+            right: 20px;
+            background: #af4261;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>MIND MANIA</h1>
+        <img src="path/to/your/logo.png" alt="Mind Mania Logo"> <!-- Update with the actual path to your logo image -->
+    </div>
+    <div class="quiz-container">
+        <h2>Quiz</h2>
+        <div class="question" id="question">
+            <!-- Question will be dynamically loaded -->
+        </div>
+        <div class="choices">
+            <!-- Choices will be dynamically loaded -->
+        </div>
+        <div class="timer" id="timer">30</div>
+        <div class="navigation">
+            <button class="nav-button" onclick="goBack()">BACK</button>
+            <button class="nav-button" onclick="nextQuestion()">NEXT</button>
+        </div>
+    </div>
+    <div class="design" id="design1"></div>
+    <div class="design" id="design2"></div>
+    <script>
+        let timeLeft = 30;
+        let timer = document.getElementById('timer');
+        let countdown = setInterval(() => {
+            if (timeLeft <= 0) {
+                clearInterval(countdown);
+                alert('Time is up! The correct answer is Manila.');
+            } else {
+                timer.innerHTML = timeLeft;
+                timeLeft--;
+            }
+        }, 1000);
+
+        function checkAnswer(answer) {
+            clearInterval(countdown);
+            if (answer === 'Manila') {
+                alert('Correct! The capital of the Philippines is Manila.');
+            } else {
+                alert('Incorrect. The correct answer is Manila.');
+            }
+        }
+
+        function goBack() {
+            window.location.href = 'path/to/your/Menu.html';  <!-- Update with the actual path to your Menu page -->
+        }
+
+        function nextQuestion() {
+            let nextBtn = document.querySelector('.nav-button:nth-child(2)');
+            if (nextBtn.innerText === 'NEXT') {
+                nextBtn.innerText = 'SHOW ANSWER';
+                alert('The correct answer is Manila.');
+            } else {
+                nextBtn.innerText = 'NEXT';
+                loadQuestion();
+            }
+        }
+
+        function loadQuestion() {
+            fetch('https://quizapi.io/api/v1/questions?topic=philippines&difficulty=easy&limit=1')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('question').innerText = data[0].question;
+                    document.querySelectorAll('.choices button')[0].innerText = data[0].choices[0];
+                    document.querySelectorAll('.choices button')[1].innerText = data[0].choices[1];
+                    document.querySelectorAll('.choices button')[2].innerText = data[0].choices[2];
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        loadQuestion();
+    </script>
+</body>
+</html>
+
+
+
